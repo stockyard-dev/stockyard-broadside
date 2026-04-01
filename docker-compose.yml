@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  broadside:
+    build: .
+    ports:
+      - "9080:9080"
+    environment:
+      - PORT=9080
+      - DATA_DIR=/data
+      - BROADSIDE_LICENSE_KEY=
+    volumes:
+      - broadside_data:/data
+    restart: unless-stopped
+volumes:
+  broadside_data:
