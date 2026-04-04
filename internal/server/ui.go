@@ -52,7 +52,7 @@ const dashHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="v
 <div class="modal-bg" id="mbg" onclick="if(event.target===this)closeModal()"><div class="modal" id="mdl"></div></div>
 <script>
 var A='/api',items=[],editId=null;
-async function load(){var r=await fetch(A+'/releases').then(function(r){return r.json()});items=r.releases||[];renderStats();render();}
+async function load(){var r=await fetch(A+'/press_releases').then(function(r){return r.json()});items=r.press_releases||[];renderStats();render();}
 function renderStats(){var total=items.length,draft=items.filter(function(r){return r.status==='draft'}).length,pub=items.filter(function(r){return r.status==='published'||r.status==='sent'}).length;
 document.getElementById('stats').innerHTML='<div class="st"><div class="st-v">'+total+'</div><div class="st-l">Total</div></div><div class="st"><div class="st-v">'+draft+'</div><div class="st-l">Drafts</div></div><div class="st"><div class="st-v" style="color:var(--green)">'+pub+'</div><div class="st-l">Published</div></div>';}
 function render(){var q=(document.getElementById('search').value||'').toLowerCase();var f=items;
@@ -73,7 +73,7 @@ if(r.publish_date)h+='<span>'+r.publish_date+'</span>';
 if(r.tags){r.tags.split(',').forEach(function(t){t=t.trim();if(t)h+='<span class="tag">#'+esc(t)+'</span>';});}
 h+='</div></div>';});
 document.getElementById('list').innerHTML=h;}
-async function del(id){if(!confirm('Delete?'))return;await fetch(A+'/releases/'+id,{method:'DELETE'});load();}
+async function del(id){if(!confirm('Delete?'))return;await fetch(A+'/press_releases/'+id,{method:'DELETE'});load();}
 function formHTML(rel){var i=rel||{title:'',body:'',contact:'',outlet:'',status:'draft',publish_date:'',tags:''};var isEdit=!!rel;
 var h='<h2>'+(isEdit?'EDIT':'NEW')+' PRESS RELEASE</h2>';
 h+='<div class="fr"><label>Title *</label><input id="f-title" value="'+esc(i.title)+'"></div>';
@@ -91,8 +91,8 @@ function openEdit(id){var r=null;for(var j=0;j<items.length;j++){if(items[j].id=
 function closeModal(){document.getElementById('mbg').classList.remove('open');editId=null;}
 async function submit(){var title=document.getElementById('f-title').value.trim();if(!title){alert('Title required');return;}
 var body={title:title,body:document.getElementById('f-body').value.trim(),contact:document.getElementById('f-contact').value.trim(),outlet:document.getElementById('f-outlet').value.trim(),status:document.getElementById('f-status').value,publish_date:document.getElementById('f-date').value,tags:document.getElementById('f-tags').value.trim()};
-if(editId){await fetch(A+'/releases/'+editId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
-else{await fetch(A+'/releases',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+if(editId){await fetch(A+'/press_releases/'+editId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+else{await fetch(A+'/press_releases',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
 closeModal();load();}
 function ft(t){if(!t)return'';try{return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'})}catch(e){return t;}}
 function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
